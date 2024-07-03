@@ -274,30 +274,84 @@ struct CPython:
         self._inc_total_rc()
         return r
 
-    fn PyDict_SetItem(
-        inout self, dict_obj: PyObjectPtr, key: PyObjectPtr, value: PyObjectPtr
-    ) -> Int:
+    fn PyDict_SetItem(inout self, dict_obj: PyObjectPtr, key: PyObjectPtr, value: PyObjectPtr) -> Int:
         var r = self.lib.get_function[
             fn (PyObjectPtr, PyObjectPtr, PyObjectPtr) -> Int32
         ](StringRef("PyDict_SetItem"))(dict_obj, key, value)
         if self.logging_enabled:
-            print(
-                "PyDict_SetItem, key: ",
-                key._get_ptr_as_int(),
-                " value: ",
-                value._get_ptr_as_int(),
-            )
+            print("PyDict_SetItem, key: ", key._get_ptr_as_int(), " value: ", value._get_ptr_as_int())
         return int(r)
 
-    fn PyDict_GetItemWithError(
-        inout self, dict_obj: PyObjectPtr, key: PyObjectPtr
-    ) -> PyObjectPtr:
+    fn PyDict_GetItemWithError(self, dict_obj: PyObjectPtr, key: PyObjectPtr) -> PyObjectPtr:
         var result = self.lib.get_function[
             fn (PyObjectPtr, PyObjectPtr) -> PyObjectPtr
         ](StringRef("PyDict_GetItemWithError"))(dict_obj, key)
         if self.logging_enabled:
             print("PyDict_GetItemWithError, key: ", key._get_ptr_as_int())
         return result
+
+    fn PyDict_DelItem(inout self, dict_obj: PyObjectPtr, key: PyObjectPtr) -> Int:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr, PyObjectPtr) -> Int32
+        ](StringRef("PyDict_DelItem"))(dict_obj, key)
+        if self.logging_enabled:
+            print("PyDict_DelItem, key: ", key._get_ptr_as_int())
+        return int(r)
+
+    fn PyDict_Contains(self, dict_obj: PyObjectPtr, key: PyObjectPtr) -> Int:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr, PyObjectPtr) -> Int32
+        ](StringRef("PyDict_Contains"))(dict_obj, key)
+        if self.logging_enabled:
+            print("PyDict_Contains, key: ", key._get_ptr_as_int())
+        return int(r)
+
+    fn PyDict_Clear(inout self, dict_obj: PyObjectPtr):
+        var r = self.lib.get_function[
+            fn (PyObjectPtr) -> None
+        ](StringRef("PyDict_Clear"))(dict_obj)
+        if self.logging_enabled:
+            print("PyDict_Clear")
+
+    fn PyDict_Copy(self, dict_obj: PyObjectPtr) -> PyObjectPtr:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr) -> PyObjectPtr
+        ](StringRef("PyDict_Copy"))(dict_obj)
+        if self.logging_enabled:
+            print("PyDict_Copy")
+        return r
+
+    fn PyDict_Items(self, dict_obj: PyObjectPtr) -> PyObjectPtr:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr) -> PyObjectPtr
+        ](StringRef("PyDict_Items"))(dict_obj)
+        if self.logging_enabled:
+            print("PyDict_Items")
+        return r
+
+    fn PyDict_Keys(self, dict_obj: PyObjectPtr) -> PyObjectPtr:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr) -> PyObjectPtr
+        ](StringRef("PyDict_Keys"))(dict_obj)
+        if self.logging_enabled:
+            print("PyDict_Keys")
+        return r
+
+    fn PyDict_Values(self, dict_obj: PyObjectPtr) -> PyObjectPtr:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr) -> PyObjectPtr
+        ](StringRef("PyDict_Values"))(dict_obj)
+        if self.logging_enabled:
+            print("PyDict_Values")
+        return r
+
+    fn PyDict_Size(self, dict_obj: PyObjectPtr) -> Int:
+        var r = self.lib.get_function[
+            fn (PyObjectPtr) -> Int32
+        ](StringRef("PyDict_Size"))(dict_obj)
+        if self.logging_enabled:
+            print("PyDict_Size")
+        return int(r)
 
     fn PyEval_GetBuiltins(inout self) -> PyObjectPtr:
         return self.lib.get_function[fn () -> PyObjectPtr](

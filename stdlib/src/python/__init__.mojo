@@ -13,4 +13,5 @@
 """Implements the python package."""
 
 from .object import PythonObject
+from .pydict import PyDict
 from .python import Python
